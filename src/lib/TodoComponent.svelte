@@ -1,11 +1,12 @@
 <script lang="ts">
+	import { darkMode } from '../darkMode';
 	import { fade } from 'svelte/transition';
 	import type { Todo } from '../state/todos';
 	import { createUpdateItem, deleteItem } from '../state/todos-actions';
 	export let todo: Todo;
 </script>
 
-<div class="grid row">
+<div class="grid row" class:dark={$darkMode} class:light={!$darkMode}>
 	<label>
 		<input
 			type="checkbox"
@@ -19,10 +20,12 @@
 		</span>
 		{todo.value}
 	</label>
-	<button on:click={() => deleteItem(todo)}>Delete</button>
+	<button class="btn" on:click={() => deleteItem(todo)}>Delete</button>
 </div>
 
-<style>
+<style lang="scss">
+	@import '../variables';
+
 	.grid {
 		margin: 4px 0;
 	}
@@ -36,24 +39,39 @@
 		position: absolute;
 		left: -5rem;
 	}
+	.dark {
+		.checkmark {
+			border: 1px solid lighten($dark, 20%);
+			background: lighten($dark, 10%);
+		}
+		input:focus + .checkmark,
+		input:hover + .checkmark {
+			border: 2px solid $light;
+		}
+	}
+	.light {
+		.checkmark {
+			border: 1px solid $dark;
+			background: darken($light, 10%);
+		}
+		input:focus + .checkmark,
+		input:hover + .checkmark {
+			border: 2px solid $dark;
+		}
+	}
 	.checkmark {
 		display: flex;
 		justify-content: center;
 		align-items: center;
 		width: 1.5rem;
 		height: 1.5rem;
-		border: 1px solid #1e1e24;
 		margin-right: 1rem;
 		box-sizing: border-box;
 	}
 	.checked {
 		width: 0.5rem;
 		height: 0.5rem;
-		background: #ff3e00;
-		border: 1px solid #1e1e24;
-	}
-	input:focus + .checkmark,
-	input:hover + .checkmark {
-		border: 2px solid #1e1e24;
+		background: $hilight;
+		border: 1px solid $dark;
 	}
 </style>

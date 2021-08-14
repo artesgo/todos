@@ -48,16 +48,13 @@
 	}
 </script>
 
-<header>
-	<h1>Todo List</h1>
-	<div class="grid row">
-		<label>
-			<span class="sr-only">Create New List</span>
-			<input type="text" bind:value={_list} placeholder={`Create New List`} />
-		</label>
-		<button on:click={_createList}>Create List</button>
-	</div>
-</header>
+<div class="grid row">
+	<label>
+		<span class="sr-only">Create New List</span>
+		<input type="text" bind:value={_list} placeholder={`Create New List`} />
+	</label>
+	<button class="btn" on:click={_createList}>Create List</button>
+</div>
 <section>
 	<!-- get list by keys -->
 	{#each $todoLists as ordered}
@@ -82,7 +79,9 @@
 						bind:value={newItem[ordered.list]}
 						placeholder={`Add item to ${ordered.list}`}
 					/>
-					<button on:click={() => _addItem(ordered.list, ordered.order)}>Add Item</button>
+					<button class="btn" on:click={() => _addItem(ordered.list, ordered.order)}
+						>Add Item</button
+					>
 				</div>
 				{#each _sort($store.todos[ordered.order][ordered.list], 'id') as todo}
 					<TodoComponent {todo} />
@@ -106,11 +105,6 @@
 </section>
 
 <style>
-	header {
-		align-items: center;
-		justify-content: space-between;
-	}
-
 	.sr-only {
 		position: absolute;
 		left: 2rem;
@@ -118,10 +112,6 @@
 	label {
 		display: block;
 		position: relative;
-	}
-	h1 {
-		font-size: 1.2rem;
-		text-align: center;
 	}
 	h2 {
 		font-size: 1rem;
