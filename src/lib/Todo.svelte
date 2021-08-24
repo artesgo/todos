@@ -6,6 +6,7 @@
 	import { todoLists } from '../state/todos-selector';
 	import TodoComponent from './TodoComponent.svelte';
 	import type { Todo } from './../state/todos';
+	import { search } from '../state/search';
 
 	let expanded = {};
 	let newItem = {};
@@ -46,31 +47,50 @@
 	function _createList() {
 		createList(_list, ++$store.listOrder);
 	}
+
+	function _search() {
+		$search = _list.toLowerCase();
+	}
+
+	$: hasFiltered = (list) => {
+		if ($search !== '') {
+			const filtered = $store.todos[list.order][list.list].filter((todo) => {
+				return (
+					todo.value.toLowerCase().indexOf($search) > -1 ||
+					todo.list.toLowerCase().indexOf($search) > -1
+				);
+			});
+			return filtered.length > 0;
+		}
+		return true;
+	};
 </script>
 
 <div class="grid row">
 	<label>
-		<span class="sr-only">Create New List</span>
-		<input type="text" bind:value={_list} placeholder={`Create New List`} />
+		<span class="sr-only">New List and Search</span>
+		<input type="text" bind:value={_list} placeholder={`New List and Search`} on:keyup={_search} />
 	</label>
 	<button class="btn" on:click={_createList}>Create List</button>
 </div>
 <section>
 	<!-- get list by keys -->
 	{#each $todoLists as ordered}
-		<button class="accordion" on:click={() => _toggle(ordered.list)}>
-			<h2 class="align-vertical">
-				<img
-					class:open={expanded[ordered.list]}
-					src="/svg/arrow-down.svg"
-					role="presentation"
-					alt=""
-					style="width: 2rem; height: 2rem;"
-				/>
-				{ordered.list.toUpperCase()}
-				{_getItemLength($store.todos[ordered.order][ordered.list])}
-			</h2>
-		</button>
+		{#if hasFiltered(ordered)}
+			<button class="accordion" on:click={() => _toggle(ordered.list)}>
+				<h2 class="align-vertical">
+					<img
+						class:open={expanded[ordered.list]}
+						src="/svg/arrow-down.svg"
+						role="presentation"
+						alt=""
+						style="width: 2rem; height: 2rem;"
+					/>
+					{ordered.list.toUpperCase()}
+					{_getItemLength($store.todos[ordered.order][ordered.list])}
+				</h2>
+			</button>
+		{/if}
 		{#if expanded[ordered.list]}
 			<div class="list-container" transition:slide={{ duration: 200 }}>
 				<div class="list-adder grid row">
@@ -84,7 +104,11 @@
 					>
 				</div>
 				{#each _sort($store.todos[ordered.order][ordered.list], 'id') as todo}
-					<TodoComponent {todo} />
+					{#if todo.value
+						.toLowerCase()
+						.indexOf($search) > -1 || todo.list.toLowerCase().indexOf($search) > -1}
+						<TodoComponent {todo} />
+					{/if}
 				{:else}
 					<div class="no-items">no todos</div>
 				{/each}
@@ -104,11 +128,9 @@
 	{/each}
 </section>
 
-<style>
-	.sr-only {
-		position: absolute;
-		left: 2rem;
-	}
+<style lang="scss">
+	@use '../styles/variables' as vars;
+
 	label {
 		display: block;
 		position: relative;
@@ -129,13 +151,13 @@
 		position: relative;
 		margin-left: 2rem;
 		padding-left: 0.5rem;
-		border-left: 2px solid #ff3e00;
+		border-left: 2px solid vars.$hilight;
 		height: 1.5rem;
 		transition: 200ms;
 	}
 	input:hover,
 	input:focus {
-		border-left: 10px solid #ff3e00;
+		border-left: 10px solid vars.$hilight;
 	}
 	input::before {
 		content: '';
@@ -145,7 +167,7 @@
 		background: red;
 		display: block;
 		z-index: 2;
-		border: 1px solid #1e1e24;
+		border: 1px solid vars.$dark;
 	}
 	.list-adder input {
 		border-right: none;

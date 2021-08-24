@@ -24,7 +24,7 @@
 </div>
 
 <style lang="scss">
-	@import '../variables';
+	@use '../styles/variables' as vars;
 
 	.grid {
 		margin: 4px 0;
@@ -41,22 +41,22 @@
 	}
 	.dark {
 		.checkmark {
-			border: 1px solid lighten($dark, 20%);
-			background: lighten($dark, 10%);
+			border: 1px solid lighten(vars.$dark, 20%);
+			background: lighten(vars.$dark, 10%);
 		}
 		input:focus + .checkmark,
 		input:hover + .checkmark {
-			border: 2px solid $light;
+			border: 2px solid vars.$light;
 		}
 	}
 	.light {
 		.checkmark {
-			border: 1px solid $dark;
-			background: darken($light, 10%);
+			border: 1px solid vars.$dark;
+			background: darken(vars.$light, 10%);
 		}
 		input:focus + .checkmark,
 		input:hover + .checkmark {
-			border: 2px solid $dark;
+			border: 2px solid vars.$dark;
 		}
 	}
 	.checkmark {
@@ -71,7 +71,7 @@
 	.checked {
 		width: 0.5rem;
 		height: 0.5rem;
-		background: $hilight;
-		border: 1px solid $dark;
+		background: vars.$hilight;
+		border: 1px solid vars.$dark;
 	}
 </style>
