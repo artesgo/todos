@@ -45,6 +45,7 @@
 	}
 
 	function _createList() {
+		$search = '';
 		createList(_list, ++$store.listOrder);
 	}
 
@@ -93,16 +94,18 @@
 		{/if}
 		{#if expanded[ordered.list]}
 			<div class="list-container" transition:slide={{ duration: 200 }}>
-				<div class="list-adder grid row">
-					<input
-						type="text"
-						bind:value={newItem[ordered.list]}
-						placeholder={`Add item to ${ordered.list}`}
-					/>
-					<button class="btn" on:click={() => _addItem(ordered.list, ordered.order)}
-						>Add Item</button
-					>
-				</div>
+				{#if hasFiltered(ordered)}
+					<div class="list-adder grid row">
+						<input
+							type="text"
+							bind:value={newItem[ordered.list]}
+							placeholder={`Add item to ${ordered.list}`}
+						/>
+						<button class="btn" on:click={() => _addItem(ordered.list, ordered.order)}
+							>Add Item</button
+						>
+					</div>
+				{/if}
 				{#each _sort($store.todos[ordered.order][ordered.list], 'id') as todo}
 					{#if todo.value
 						.toLowerCase()
