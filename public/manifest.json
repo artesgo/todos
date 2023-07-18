@@ -11,5 +11,10 @@
 		"16": "icon/arrow-down--16.png",
 		"48": "icon/arrow-down--48.png",
 		"128": "icon/arrow-down--128.png"
+	},
+	"browser_specific_settings": {
+		"gecko": {
+			"id": "artesgo@todos"
+		}
 	}
 }
